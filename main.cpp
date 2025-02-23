@@ -17,7 +17,7 @@ using namespace chrono;
 
 // Game settings
 const int gridSize = 9;
-const int numOfBombs = 10;
+const int numOfBombs = gridSize;
 int spawnX = gridSize / 2, spawnY = gridSize / 2; // Player spawn position
 int pixelsPerIndex = 1; // Determines the size of each tile when rendered
 char playerIcon = '@';
@@ -44,7 +44,7 @@ struct Tile {
     }
 };
 
-Tile bomb = Tile(true, 0, 255, 255, true, "#");
+Tile bomb = Tile(true, 255, 255, 255, true, "#");
 Tile tile = Tile(true, 255, 255, 255, false, "#");
 Tile flag = Tile(false, 255, 0, 0, false, "#");
 
@@ -74,15 +74,6 @@ void printGrid() {
             }
             cout << endl;
         }
-    }
-    cout << "\n";
-    for (int i = 0; i < gridSize; i++) {
-        for (int j = 0; j < gridSize; j++) {
-            cout << SET_COLOR(gameMapDupe[i][j].colorR, gameMapDupe[i][j].colorG, gameMapDupe[i][j].colorB)
-                << gameMapDupe[i][j].texture << gameMapDupe[i][j].texture
-                << RESET_COLOR;
-        }
-        cout << endl;
     }
 }
 
@@ -123,7 +114,7 @@ void initializeGame() {
     for (int i = 0; i < numOfBombs; i++) {
         randX = rand() % gridSize;
         randY = rand() % gridSize;
-        if (randX == 0 && randY == 0) {
+        if (randX == spawnX && randY == spawnY) {
             gameMap[randX][randY] = tile;
             gameMapDupe[randX][randY] = tile;
         }
@@ -131,7 +122,7 @@ void initializeGame() {
             gameMap[randX][randY] = bomb;
             gameMapDupe[randX][randY] = bomb;
         }
-            
+
     }
 }
 
@@ -246,39 +237,39 @@ int checkFlagPlace(char input, int bombsLeft) {
 
 int getSurroundingBombs(int y, int x) {
     int surroundingBombs = 0;
-        if (y != 0 && x != 0) {
-            if (gameMap[y - 1][playerX - 1] == bomb)
-                surroundingBombs++;
-        }
-        if (y != 0) {
-            if (gameMap[y - 1][playerX] == bomb)
-                surroundingBombs++;
-        }
-        if (y != 0 && playerX != gridSize - 1) {
-            if (gameMap[y - 1][playerX + 1] == bomb)
-                surroundingBombs++; 
-        }
-        if (playerX != 0) {
-            if (gameMap[y][playerX - 1] == bomb)
-                surroundingBombs++; 
-        }
-        if (playerX != gridSize - 1) {
-            if (gameMap[y][playerX + 1] == bomb)
-                surroundingBombs++; 
-        }
-        if (y != gridSize - 1 && playerX != 0) {
-            if (gameMap[y + 1][playerX - 1] == bomb)
-                surroundingBombs++; 
-        }
-        if (y != gridSize - 1) {
-            if (gameMap[y + 1][playerX] == bomb)
-                surroundingBombs++; 
-        }
-        if (y != gridSize - 1 && playerX != gridSize - 1) {
-            if (gameMap[y + 1][playerX + 1] == bomb)
-                surroundingBombs++; 
-        }
-        return surroundingBombs;
+    if (y != 0 && x != 0) {
+        if (gameMapDupe[y - 1][playerX - 1] == bomb)
+            surroundingBombs++;
+    }
+    if (y != 0) {
+        if (gameMapDupe[y - 1][playerX] == bomb)
+            surroundingBombs++;
+    }
+    if (y != 0 && playerX != gridSize - 1) {
+        if (gameMapDupe[y - 1][playerX + 1] == bomb)
+            surroundingBombs++;
+    }
+    if (playerX != 0) {
+        if (gameMapDupe[y][playerX - 1] == bomb)
+            surroundingBombs++;
+    }
+    if (playerX != gridSize - 1) {
+        if (gameMapDupe[y][playerX + 1] == bomb)
+            surroundingBombs++;
+    }
+    if (y != gridSize - 1 && playerX != 0) {
+        if (gameMapDupe[y + 1][playerX - 1] == bomb)
+            surroundingBombs++;
+    }
+    if (y != gridSize - 1) {
+        if (gameMapDupe[y + 1][playerX] == bomb)
+            surroundingBombs++;
+    }
+    if (y != gridSize - 1 && playerX != gridSize - 1) {
+        if (gameMapDupe[y + 1][playerX + 1] == bomb)
+            surroundingBombs++;
+    }
+    return surroundingBombs;
 }
 
 void explosionAnimation() {
@@ -319,12 +310,15 @@ void explosionAnimation() {
 
 int main() {
     initializeGame();
-
+    
     int bombsLeft = 0;
+    int totalBombs = 0;
     for (int i = 0; i <= gridSize - 1; i++) {
         for (int j = 0; j <= gridSize - 1; j++) {
-            if (gameMap[i][j] == bomb)
+            if (gameMap[i][j] == bomb) {
                 bombsLeft++;
+                totalBombs++; 
+            }
         }
     }
 
@@ -332,7 +326,7 @@ int main() {
 
         printGrid();
         cout << "Use WASD to move. Press 'q' to quit.\n";
-        cout << "Number of bombs left:" << bombsLeft << "\n";
+        cout << "There are " << totalBombs << " bombs in this round.\n";
 
 
         gameMap[playerY][playerX] = Tile(true, 255, 255 - (getSurroundingBombs(playerY, playerX) * 31), 255 - (getSurroundingBombs(playerY, playerX) * 31), false, to_string(getSurroundingBombs(playerY, playerX)));
@@ -343,12 +337,17 @@ int main() {
 
         if (input == 'q') break;
         bombsLeft = checkFlagPlace(input, bombsLeft);
-        
+
 
         if (movePlayer(input)) {
             system("cls");
             explosionAnimation();
             cout << "You hit a bomb!!";
+            break;
+        }
+
+        if (bombsLeft == 0) {
+            cout << "You did it!!\nYou flagged all the bombs on this board!!";
             break;
         }
     }
