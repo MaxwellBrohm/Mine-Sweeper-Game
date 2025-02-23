@@ -126,7 +126,7 @@ void initializeGame() {
     }
 }
 
-int checkFlagPlace(char input, int bombsLeft) {
+int checkFlagPlace(char input, int bombsLeft, int flagsLeft) {
     if (input == '7') {
         if (playerY != 0 && playerX != 0) {
             if (gameMap[playerY - 1][playerX - 1] == bomb)
@@ -136,8 +136,10 @@ int checkFlagPlace(char input, int bombsLeft) {
                     bombsLeft++;
                 gameMap[playerY - 1][playerX - 1] = gameMapDupe[playerY - 1][playerX - 1];
             }
-            else
-                gameMap[playerY - 1][playerX - 1] = flag;
+            else {
+                if (flagsLeft >= 0)
+                    gameMap[playerY - 1][playerX - 1] = flag;
+            }
         }
     }
     if (input == '8') {
@@ -149,8 +151,10 @@ int checkFlagPlace(char input, int bombsLeft) {
                     bombsLeft++;
                 gameMap[playerY - 1][playerX] = gameMapDupe[playerY - 1][playerX];
             }
-            else
-                gameMap[playerY - 1][playerX] = flag;
+            else {
+                if (flagsLeft >= 0)
+                    gameMap[playerY - 1][playerX] = flag;
+            }
         }
     }
     if (input == '9') {
@@ -162,8 +166,10 @@ int checkFlagPlace(char input, int bombsLeft) {
                     bombsLeft++;
                 gameMap[playerY - 1][playerX + 1] = gameMapDupe[playerY - 1][playerX + 1];
             }
-            else
-                gameMap[playerY - 1][playerX + 1] = flag;
+            else {
+                if (flagsLeft >= 0)
+                    gameMap[playerY - 1][playerX + 1] = flag;
+            }
         }
     }
     if (input == '4') {
@@ -175,8 +181,10 @@ int checkFlagPlace(char input, int bombsLeft) {
                     bombsLeft++;
                 gameMap[playerY][playerX - 1] = gameMapDupe[playerY][playerX - 1];
             }
-            else
-                gameMap[playerY][playerX - 1] = flag;
+            else {
+                if (flagsLeft >= 0)
+                    gameMap[playerY][playerX - 1] = flag;
+            }
         }
     }
     if (input == '6') {
@@ -188,8 +196,10 @@ int checkFlagPlace(char input, int bombsLeft) {
                     bombsLeft++;
                 gameMap[playerY][playerX + 1] = gameMapDupe[playerY][playerX + 1];
             }
-            else
-                gameMap[playerY][playerX + 1] = flag;
+            else {
+                if (flagsLeft >= 0)
+                    gameMap[playerY][playerX + 1] = flag;
+            }
         }
     }
     if (input == '1') {
@@ -201,8 +211,10 @@ int checkFlagPlace(char input, int bombsLeft) {
                     bombsLeft++;
                 gameMap[playerY + 1][playerX - 1] = gameMapDupe[playerY + 1][playerX - 1];
             }
-            else
-                gameMap[playerY + 1][playerX - 1] = flag;
+            else {
+                if (flagsLeft >= 0)
+                    gameMap[playerY + 1][playerX - 1] = flag;
+            }
         }
     }
     if (input == '2') {
@@ -214,8 +226,10 @@ int checkFlagPlace(char input, int bombsLeft) {
                     bombsLeft++;
                 gameMap[playerY + 1][playerX] = gameMapDupe[playerY + 1][playerX];
             }
-            else
-                gameMap[playerY + 1][playerX] = flag;
+            else {
+                if (flagsLeft >= 0)
+                    gameMap[playerY + 1][playerX] = flag;
+            }
         }
     }
     if (input == '3') {
@@ -227,12 +241,123 @@ int checkFlagPlace(char input, int bombsLeft) {
                     bombsLeft++;
                 gameMap[playerY + 1][playerX + 1] = gameMapDupe[playerY + 1][playerX + 1];
             }
-            else
-                gameMap[playerY + 1][playerX + 1] = flag;
+            else {
+                if (flagsLeft >= 0)
+                    gameMap[playerY + 1][playerX + 1] = flag;
+            }
         }
     }
     return bombsLeft;
 }
+
+int flagNum(char input, int flagsLeft) {
+    if (input == '7') {
+        if (playerY != 0 && playerX != 0) {
+            if (gameMap[playerY - 1][playerX - 1] == flag) {
+                if (flagsLeft < 0)
+                    flagsLeft++;
+                flagsLeft++;
+            }
+            else {
+                if (flagsLeft >= 0)
+                    flagsLeft--;
+            }
+        }
+    }
+    if (input == '8') {
+        if (playerY != 0) {
+            if (gameMap[playerY - 1][playerX] == flag) {
+                if (flagsLeft < 0)
+                    flagsLeft++;
+                flagsLeft++;
+            }
+            else {
+                if (flagsLeft >= 0)
+                    flagsLeft--;
+            }
+        }
+    }
+    if (input == '9') {
+        if (playerY != 0 && playerX != gridSize - 1) {
+            if (gameMap[playerY - 1][playerX + 1] == flag) {
+                if (flagsLeft < 0)
+                    flagsLeft++;
+                flagsLeft++;
+            }
+            else {
+                if (flagsLeft >= 0)
+                    flagsLeft--;
+            }
+        }
+    }
+    if (input == '4') {
+        if (playerX != 0) {
+            if (gameMap[playerY][playerX - 1] == flag) {
+                if (flagsLeft < 0)
+                    flagsLeft++;
+                flagsLeft++;
+            }
+            else {
+                if (flagsLeft >= 0)
+                    flagsLeft--;
+            }
+        }
+    }
+    if (input == '6') {
+        if (playerX != gridSize - 1) {
+            if (gameMap[playerY][playerX + 1] == flag) {
+                if (flagsLeft < 0)
+                    flagsLeft++;
+                flagsLeft++;
+            }
+            else {
+                if (flagsLeft >= 0)
+                    flagsLeft--;
+            }
+        }
+    }
+    if (input == '1') {
+        if (playerY != gridSize - 1 && playerX != 0) {
+            if (gameMap[playerY + 1][playerX - 1] == flag) {
+                if (flagsLeft < 0)
+                    flagsLeft++;
+                flagsLeft++;
+            }
+            else {
+                if (flagsLeft >= 0)
+                    flagsLeft--;
+            }
+        }
+    }
+    if (input == '2') {
+        if (playerY != gridSize - 1) {
+            if (gameMap[playerY + 1][playerX] == flag) {
+                if (flagsLeft < 0)
+                    flagsLeft++;
+                flagsLeft++;
+            }
+            else {
+                if (flagsLeft >= 0)
+                    flagsLeft--;
+            }
+        }
+    }
+    if (input == '3') {
+        if (playerY != gridSize - 1 && playerX != gridSize - 1) {
+            if (gameMap[playerY + 1][playerX + 1] == flag) {
+                if (flagsLeft < 0)
+                    flagsLeft++;
+                flagsLeft++;
+            }
+            else {
+                if (flagsLeft >= 0)
+                    flagsLeft--;
+            }
+        }
+    }
+    return flagsLeft;
+}
+
 
 
 int getSurroundingBombs(int y, int x) {
@@ -313,20 +438,27 @@ int main() {
     
     int bombsLeft = 0;
     int totalBombs = 0;
+    int flagsLeft = 0;
+    int displayFlags = 0;
     for (int i = 0; i <= gridSize - 1; i++) {
         for (int j = 0; j <= gridSize - 1; j++) {
             if (gameMap[i][j] == bomb) {
                 bombsLeft++;
                 totalBombs++; 
+                flagsLeft++; 
             }
         }
     }
-
+    
     while (true) {
+        displayFlags = flagsLeft;
+        if (displayFlags == -1)
+            displayFlags = 0;
 
         printGrid();
         cout << "Use WASD to move. Press 'q' to quit.\n";
         cout << "There are " << totalBombs << " bombs in this round.\n";
+        cout << "You can place " << displayFlags << " more flags.\n";
 
 
         gameMap[playerY][playerX] = Tile(true, 255, 255 - (getSurroundingBombs(playerY, playerX) * 31), 255 - (getSurroundingBombs(playerY, playerX) * 31), false, to_string(getSurroundingBombs(playerY, playerX)));
@@ -334,9 +466,11 @@ int main() {
 
         char input = _getch(); // Get user input
 
+        flagsLeft = flagNum(input, flagsLeft);
+        bombsLeft = checkFlagPlace(input, bombsLeft, flagsLeft);
 
         if (input == 'q') break;
-        bombsLeft = checkFlagPlace(input, bombsLeft);
+        
 
 
         if (movePlayer(input)) {
