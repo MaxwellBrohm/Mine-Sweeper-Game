@@ -1,3 +1,8 @@
+// Maxwell Brohm
+// Minesweeper Game
+// 2/25/2025
+// Extra: accepts player input without the need for the enter key with _getch().
+
 #include <iostream>
 #include <vector>
 #include <conio.h>   // For _getch()
@@ -435,7 +440,7 @@ void explosionAnimation() {
 
 int main() {
     initializeGame();
-    
+
     int bombsLeft = 0;
     int totalBombs = 0;
     int flagsLeft = 0;
@@ -444,12 +449,12 @@ int main() {
         for (int j = 0; j <= gridSize - 1; j++) {
             if (gameMap[i][j] == bomb) {
                 bombsLeft++;
-                totalBombs++; 
-                flagsLeft++; 
+                totalBombs++;
+                flagsLeft++;
             }
         }
     }
-    
+
     while (true) {
         displayFlags = flagsLeft;
         if (displayFlags == -1)
@@ -470,7 +475,7 @@ int main() {
         bombsLeft = checkFlagPlace(input, bombsLeft, flagsLeft);
 
         if (input == 'q') break;
-        
+
 
 
         if (movePlayer(input)) {
